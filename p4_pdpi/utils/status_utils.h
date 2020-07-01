@@ -6,6 +6,7 @@
 #include <string>
 
 #include "absl/base/attributes.h"
+#include "absl/types/optional.h"
 #include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
 
@@ -60,24 +61,24 @@ class ABSL_MUST_USE_RESULT StatusOr {
   // Value accessors.
   ABSL_MUST_USE_RESULT const T& value() const& {
     assert(status_.ok());
-    return value_;
+    return value_.value();
   }
   ABSL_MUST_USE_RESULT T& value() & {
     assert(status_.ok());
-    return value_;
+    return value_.value();
   }
   ABSL_MUST_USE_RESULT const T&& value() const&& {
     assert(status_.ok());
-    return std::move(value_);
+    return std::move(value_.value());
   }
   ABSL_MUST_USE_RESULT T&& value() && {
     assert(status_.ok());
-    return std::move(value_);
+    return std::move(value_.value());
   }
 
  private:
   absl::Status status_;
-  T value_;
+  absl::optional<T> value_;
 };
 
 // StatusBuilder facilitates easier construction of Status objects with streamed
